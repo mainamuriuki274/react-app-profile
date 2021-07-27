@@ -1,0 +1,27 @@
+.info-container{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+}
+.info-container .logo{
+    text-align: center;
+    margin: 2rem 0;
+}
+.info-container .info-image{
+    margin: 0 auto;
+    width: 30%;
+
+}
+.info-container .info-image img{
+    width: 100%;
+    height: auto;
+}
+.info-container .info{
+    text-align: center;
+}
+.info-container .info-title{
+    margin: 1rem 0;
+}
+.info-container .info-description{
+    margin: 1rem 0;
+}

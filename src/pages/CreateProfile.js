@@ -1,4 +1,5 @@
 import SplitScreen from "../components/SplitScreen/SplitScreen";
+import createProfile from "../images/create_profile.png";
 
 const CreateProfile = () => {
     return ( 
