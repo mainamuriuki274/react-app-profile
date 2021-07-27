@@ -1,0 +1,93 @@
+.split-screen .left,.right {
+    height: 100%;
+    width: 50%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+ }
+ .split-screen .left {
+    left: 0;
+    background-color: var(--background);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+ }
+ .split-screen .right {
+    right: 0;
+    background-color: #FFFFFF;
+ }
+ .split-screen .logo-split-screen{
+     padding-left: 1rem;
+ }
+
+ .split-screen .logo-mobile{
+    top: 0;
+    visibility: hidden;
+}
+.split-screen .form-container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    padding: 2rem;
+}
+.form-container .form-title, .form-description{
+    width: 100%;
+    text-align: center;
+    margin: 1rem;
+}
+.form-container input, select{
+    width: 100%;
+    padding: 0.8rem 1rem;
+    margin: 0.8rem 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #EEEEEE;
+}
+.form-container input[type=checkbox]{
+    width: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding-right: 10px;
+}
+.form-container .accept-checkbox{
+    display: inline-block;
+}
+.form-container .forgot-password{
+    margin: 1rem 0;
+}
+.split-screen .btn-submit{
+    width: 100%;
+    margin: 1rem 0;
+}
+.split-screen .action-mobile{
+    visibility: hidden;
+    margin: 1rem 0;
+}
+.split-screen .action{
+    float: right;
+    margin: 0 1rem;
+}
+@media screen and (max-width: 960px) {
+    .split-screen .left{
+        visibility: hidden;
+        width: 0;
+    }
+    .split-screen .right{
+        width: 100%;
+    }
+    .split-screen .logo-mobile{
+        visibility: visible;
+    }
+    .split-screen .action{
+        visibility: hidden;
+    }
+    .split-screen .action-mobile{
+        visibility: visible;
+    }
+}
