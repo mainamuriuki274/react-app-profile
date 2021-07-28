@@ -7,15 +7,14 @@
 .main-content .navbar{
     justify-content: flex-end;
     padding: 0 3rem;
-}
-.main-content .page-content{
-    padding: 3rem;
+    background-color: white;
 }
 .main-content .main{
     width: 85%;
     height: 100%;
     right: 0;
     position: fixed;
+    overflow-y: auto;
     background-color: white;
 }
 .main-content .logo-main{
@@ -78,7 +77,11 @@
     color: black;
     background-color: white;
 }
-
+.main-content .main-profile-img{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
 .main-content .menu-icon-open{
     margin-right: auto;
     display: none; 
@@ -93,6 +96,87 @@
     color: #fff;
 }
 
+.main-content .update-form{
+    width: 70%;
+    margin: 0 auto;
+}
+.main-content .update-form{
+    width: 70%;
+    margin: 0 auto;
+}
+.main-content .update-form img{
+    width: 100px;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 50%;
+    padding: 1rem 0;
+    box-shadow: #bababa;
+}
+.main-content .page-content{
+    padding: 3rem;
+}
+.main-content .update-form .left-section,.right-section{
+    width: 50%;
+    height: 100%;
+    padding: 2rem;
+}
+.main-content .update-form .left-section{
+    float: left;
+    border-right: 1px solid #bababa;
+}
+.main-content .update-form .section-title{
+    color: #808080;
+    padding: 1.5rem 0;
+}
+.main-content .update-form .right-section{
+    float: right;
+}
+.main-content .update-form .submit-btn{
+    margin-top: 3rem;
+}
+.main-content .right-section .contact-info, .authentication-info, .danger-zone{
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #bababa;
+}
+
+.main-content .delete-account-container, .change-password-container, .change-email-container{
+    text-align: center;
+    width: 30%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin: 0 auto;
+    padding: 2rem;
+}
+.delete-account-container h1,h2,p{
+    padding: 1rem 0;
+
+}
+.page-content i{
+    font-size: 40px;
+    padding: 1rem 0;
+}
+.delete-account-container i{
+    color: red;
+}
+.change-password-container i, .change-email-container i{
+    color: var(--primary);
+}
+.delete-account-container .btn-outline{
+    border: 2px solid red;
+    color: red;
+}
+.delete-account-container .btn-outline:hover{
+    border: 2px solid red;
+    transition: all 0.3s ease-out;
+    background: red;
+    color: #FFFFFF;
+    font-weight: 900;
+    transition: 250ms;
+}
+@media screen and (max-width: 1300px) {
+    .main-content .delete-account-container, .change-password-container, .change-email-container{
+        width: 50%;
+    }
+}
 @media screen and (max-width: 1300px) {
     .main-content .logo-main{
         padding-left: 1.5rem;
@@ -100,6 +184,9 @@
     .main-content .sidenav-items{
         margin-left: 1.5rem;
     } 
+    .main-content .delete-account-container, .change-password-container, .change-email-container{
+        width: 60%;
+    }
 }
 @media screen and (max-width: 1150px) {
     .main-content .logo-main{
@@ -108,6 +195,29 @@
     .main-content .sidenav-items{
         margin-left: 1rem;
     } 
+    .main-content .update-form .left-section,.right-section{
+        width: 100%;
+    }
+    .main-content .update-form .left-section{
+        border-bottom: 1px solid #bababa;
+        border-right: none;
+    }
+    .main-content .update-form .submit-btn{
+        margin-top: 3rem;
+    }
+    .main-content .right-section .contact-info, .authentication-info, .danger-zone{
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #bababa;
+    }
+    .main-content .page-content{
+        padding: 2rem;
+    }
+    .main-content .update-form{
+        width: 100%;
+    }
+    .main-content .delete-account-container, .change-password-container, .change-email-container{
+        width: 70%;
+    }
 }
 @media screen and (max-width: 1050px) {
     .main-content .sidenav{
@@ -143,5 +253,10 @@
         right: 0;
         position: fixed;
     }
-
+    .main-content .page-content{
+        padding: 1rem;
+    }
+    .main-content .delete-account-container, .change-password-container, .change-email-container{
+        width: 80%;
+    }
 }

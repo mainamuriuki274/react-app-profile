@@ -9,6 +9,10 @@ import PageNotFound from './pages/PageNotFound';
 import EmailSent from './pages/EmailSent';
 import AccountDeleted from './pages/AccountDeleted';
 import Home from './pages/Home';
+import UpdateForm from './pages/UpdateForm';
+import DeleteAccount from './pages/DeleteAccount';
+import ChangePassword from './pages/ChangePassword';
+import ChangeEmail from './pages/ChangeEmail';
 
 function App() {
   return (
@@ -32,6 +36,18 @@ function App() {
           </Route>
           <Route path="/email-sent">
             <EmailSent />
+          </Route>
+          <Route exact path="/my-account">
+            <UpdateForm />
+          </Route>
+          <Route path="/my-account/delete-account">
+            <DeleteAccount />
+          </Route>
+          <Route path="/my-account/change-password">
+            <ChangePassword />
+          </Route>
+          <Route path="/my-account/change-email">
+            <ChangeEmail />
           </Route>
           <Route path="/account-deleted">
             <AccountDeleted />

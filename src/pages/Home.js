@@ -4,7 +4,7 @@ const Home = () => {
     return ( 
         <Main 
             pageContent = {[
-                <h1>prometheus</h1>
+                <h1>prometheus - Homepage</h1>
             ]}
         />
      );

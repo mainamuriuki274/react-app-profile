@@ -39,7 +39,7 @@
     text-align: center;
     margin: 1rem;
 }
-.form-container input, select{
+input, select{
     width: 100%;
     padding: 0.8rem 1rem;
     margin: 0.8rem 0;
@@ -49,7 +49,7 @@
     box-sizing: border-box;
     background-color: #EEEEEE;
 }
-.form-container input[type=checkbox]{
+input[type=checkbox]{
     width: 20px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -61,7 +61,7 @@
 .form-container .forgot-password{
     margin: 1rem 0;
 }
-.split-screen .btn-submit{
+.btn-submit{
     width: 100%;
     margin: 1rem 0;
 }

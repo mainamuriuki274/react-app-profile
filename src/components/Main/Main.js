@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import './Main.css'
-import welcome from '../../images/welcome.png'
 
 const Main = (props) => {
     const [click,setClick] = useState(false);
@@ -44,8 +43,7 @@ const Main = (props) => {
                     </div>
                 </div>
                 <div className="page-content">
-                   {props.pageContent}
-
+                    {props.pageContent}
                 </div>
             </div>
         </div>
