@@ -8,6 +8,7 @@ import CreateProfile from './pages/CreateProfile';
 import PageNotFound from './pages/PageNotFound';
 import EmailSent from './pages/EmailSent';
 import AccountDeleted from './pages/AccountDeleted';
+import Home from './pages/Home';
 
 function App() {
   return (
@@ -34,6 +35,9 @@ function App() {
           </Route>
           <Route path="/account-deleted">
             <AccountDeleted />
+          </Route>
+          <Route path="/home">
+            <Home />
           </Route>
           <Route path="*">
             <PageNotFound />

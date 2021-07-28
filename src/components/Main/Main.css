@@ -1,0 +1,147 @@
+.main-content .sidenav{
+    width: 15%;
+    height: 100%;
+    position: fixed;
+    background-color: var(--background);
+}
+.main-content .navbar{
+    justify-content: flex-end;
+    padding: 0 3rem;
+}
+.main-content .page-content{
+    padding: 3rem;
+}
+.main-content .main{
+    width: 85%;
+    height: 100%;
+    right: 0;
+    position: fixed;
+    background-color: white;
+}
+.main-content .logo-main{
+    top: 10%;
+    padding: 2rem;
+}
+.main-content .sidenav-links{
+    color: black;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    height: 100%;
+    margin-top: 2rem;
+    font-size: 1.3rem;
+}
+.main-content .sidenav-menu{
+    margin-left: 2rem;
+    margin-top: 3rem;
+}
+.main-content .sidenav-links:hover {
+    color: var(--primary);
+    transition: all 0.2s ease-out;
+    font-weight: 900;
+    font-size: 1.5rem;
+  }
+.main-content .sidenav-menu i{
+    font-size: 20px;
+    margin-right: 1rem;
+}
+.main-content .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+.main-content  .dropdown-content-active {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    z-index: 1;
+  }
+  
+.main-content .dropdown-content-active {
+    display: block;
+  }
+.main-content .dropdown-content {
+    display: none;
+  }
+.main-content .logout-button{
+    text-decoration: none;
+    color: #3e3f40;
+}
+.main-content .dropdown-btn{
+    cursor: pointer;
+}
+.main-content .dropdown-btn:hover{
+    color: black;
+    background-color: white;
+}
+
+.main-content .menu-icon-open{
+    margin-right: auto;
+    display: none; 
+}
+.main-content .open-icon{
+    color: #000;
+}
+.main-content .menu-icon-close{
+    float: right;
+    font-size: 20px;
+    display: none;
+    color: #fff;
+}
+
+@media screen and (max-width: 1300px) {
+    .main-content .logo-main{
+        padding-left: 1.5rem;
+    }  
+    .main-content .sidenav-items{
+        margin-left: 1.5rem;
+    } 
+}
+@media screen and (max-width: 1150px) {
+    .main-content .logo-main{
+        padding-left: 1rem;
+    }  
+    .main-content .sidenav-items{
+        margin-left: 1rem;
+    } 
+}
+@media screen and (max-width: 1050px) {
+    .main-content .sidenav{
+        width: 0;
+        transition: all 0.5s ease;
+    }
+    .main-content .main{
+        width: 100%;
+        transition: all 0.5s ease;
+    }
+    .main-content .menu-icon-open{
+        display: block; 
+    }
+    .main-content .menu-icon-close{
+        display: block;
+    }
+    .main-content .sidenav-open{
+        width: 60%;
+        height: 100%;
+        position: fixed;
+        background-color: black;
+        transition: all 0.5s ease;
+        z-index: 1;
+    }
+    .main-content .sidenav-links{
+        color: var(--background);
+    }
+    .main-content .close-icon{
+        color: #fff;
+    }
+    .main-content .main-small{
+        width: 100%;
+        right: 0;
+        position: fixed;
+    }
+
+}

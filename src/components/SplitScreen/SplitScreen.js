@@ -4,10 +4,10 @@ import './SplitScreen.css'
 const SplitScreen = (props) => {
     return ( 
         <div className="split-screen">
-            <div style={{backgroundImage: "url('" + props.img + "')" }} class="left">
+            <div style={{backgroundImage: "url('" + props.img + "')" }} className="left">
                 <Link to="/" className="logo logo-split-screen">prometheus</Link> 
             </div>
-            <div class="right">
+            <div className="right">
                 <Link to="/" className="logo logo-split-screen logo-mobile">prometheus</Link> 
                 <div className="action">{props.actionText} {props.action &&<Link to={props.actionUrl}><button className="btn btn-outline">{props.action}</button></Link>}</div>
                 <div className="form-container">
