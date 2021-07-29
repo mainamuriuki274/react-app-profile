@@ -1,41 +1,50 @@
 import './App.css';
-import Navbar from './components/Navbar/Navbar';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
-import Signup from './pages/Signup';
-import Login from './pages/Login';
-import ForgotPassword from './pages/ForgotPassword';
-import CreateProfile from './pages/CreateProfile';
-import PageNotFound from './pages/PageNotFound';
-import EmailSent from './pages/EmailSent';
-import AccountDeleted from './pages/AccountDeleted';
-import Home from './pages/Home';
-import UpdateForm from './pages/UpdateForm';
-import DeleteAccount from './pages/DeleteAccount';
-import ChangePassword from './pages/ChangePassword';
-import ChangeEmail from './pages/ChangeEmail';
+import {BrowserRouter as Router, Route,Redirect, Switch} from 'react-router-dom'
+import Signup from './components/Signup';
+import Login from './components/Login';
+import ForgotPassword from './components/ForgotPassword';
+import CreateProfile from './components/CreateProfile';
+import PageNotFound from './components/PageNotFound';
+import EmailSent from './components/EmailSent';
+import AccountDeleted from './components/AccountDeleted';
+import Home from './components/Home';
+import UpdateForm from './components/UpdateForm';
+import DeleteAccount from './components/DeleteAccount';
+import ChangePassword from './components/ChangePassword';
+import ChangeEmail from './components/ChangeEmail';
+import Landing from './components/Landing/Landing';
+import useToken from './components/useToken';
 
 function App() {
+  const { token, setToken } = useToken();
   return (
     <div className="App">
       <Router>
         <Switch>
           <Route path="/" exact>
-            <Navbar />
+            <Landing />
           </Route>
           <Route path="/signup">
-            <Signup />
+            <Signup setToken={setToken}/>
           </Route>
           <Route path="/login">
-            <Login />
+            <Login setToken={setToken} />
           </Route>
           <Route path="/forgot-password">
             <ForgotPassword />
           </Route>
-          <Route path="/create-profile">
-            <CreateProfile />
-          </Route>
           <Route path="/email-sent">
             <EmailSent />
+          </Route>
+          <Route path="/account-deleted">
+            <AccountDeleted />
+          </Route>
+
+      {!token ? <Redirect to="/login" /> :
+      <Router>
+        <Switch>
+          <Route path="/create-profile">
+            <CreateProfile />
           </Route>
           <Route exact path="/my-account">
             <UpdateForm />
@@ -49,12 +58,13 @@ function App() {
           <Route path="/my-account/change-email">
             <ChangeEmail />
           </Route>
-          <Route path="/account-deleted">
-            <AccountDeleted />
-          </Route>
           <Route path="/home">
             <Home />
           </Route>
+          </Switch>
+      </Router>
+      }
+
           <Route path="*">
             <PageNotFound />
           </Route>
