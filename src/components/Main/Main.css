@@ -153,6 +153,7 @@
 .page-content i{
     font-size: 40px;
     padding: 1rem 0;
+    display: flex;
 }
 .delete-account-container i{
     color: red;
@@ -175,6 +176,7 @@
 @media screen and (max-width: 1300px) {
     .main-content .delete-account-container, .change-password-container, .change-email-container{
         width: 50%;
+        transition: all 0.5s ease;
     }
 }
 @media screen and (max-width: 1300px) {
@@ -186,6 +188,7 @@
     } 
     .main-content .delete-account-container, .change-password-container, .change-email-container{
         width: 60%;
+        transition: all 0.5s ease;
     }
 }
 @media screen and (max-width: 1150px) {
@@ -217,6 +220,7 @@
     }
     .main-content .delete-account-container, .change-password-container, .change-email-container{
         width: 70%;
+        transition: all 0.5s ease;
     }
 }
 @media screen and (max-width: 1050px) {
@@ -258,5 +262,6 @@
     }
     .main-content .delete-account-container, .change-password-container, .change-email-container{
         width: 80%;
+        transition: all 0.5s ease;
     }
 }
