@@ -1,8 +1,8 @@
 import Main from "../components/Main/Main";
 
-const Home = () => {
+const Home = (props) => {
     return ( 
-        <Main 
+        <Main token={props.token}
             pageContent = {[
                 <h1>prometheus - Homepage</h1>
             ]}
