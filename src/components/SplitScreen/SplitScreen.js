@@ -8,7 +8,7 @@ const SplitScreen = (props) => {
                 <Link to="/" className="logo logo-split-screen">prometheus</Link> 
             </div>
             <div className="right">
-                <Link to="/" className="logo logo-split-screen logo-mobile">prometheus</Link> 
+                <div className="logo-container"><Link to="/" className="logo logo-split-screen logo-mobile">prometheus</Link></div> 
                 <div className="action">{props.actionText} {props.action &&<Link to={props.actionUrl}><button className="btn btn-outline">{props.action}</button></Link>}</div>
                 <div className="form-container">
                 <h1 className="form-title">{props.formTitle}</h1>

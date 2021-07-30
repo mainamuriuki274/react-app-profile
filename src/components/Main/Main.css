@@ -3,6 +3,7 @@
     height: 100%;
     position: fixed;
     background-color: var(--background);
+    transition: all 0.5s ease;
 }
 .main-content .navbar{
     justify-content: flex-end;
@@ -16,6 +17,7 @@
     position: fixed;
     overflow-y: auto;
     background-color: white;
+    transition: all 0.5s ease;
 }
 .main-content .logo-main{
     top: 10%;
@@ -88,6 +90,10 @@
 }
 .main-content .open-icon{
     color: #000;
+    cursor: pointer;
+}
+.main-content .close-icon{
+    cursor: pointer;
 }
 .main-content .menu-icon-close{
     float: right;
@@ -113,14 +119,18 @@
     box-shadow: #bababa;
 }
 .main-content .page-content{
+    width: 100%;
     padding: 3rem;
+    position: absolute;
 }
 .main-content .update-form .left-section,.right-section{
     width: 50%;
     height: 100%;
     padding: 2rem;
+    transition: all ease;
 }
 .main-content .update-form .left-section{
+    transition: all 0.5s ease;
     float: left;
     border-right: 1px solid #bababa;
 }
@@ -155,11 +165,15 @@
     padding: 1rem 0;
     display: flex;
 }
+.page-content .icon{
+    text-align: center;
+}
 .delete-account-container i{
     color: red;
 }
 .change-password-container i, .change-email-container i{
     color: var(--primary);
+    
 }
 .delete-account-container .btn-outline{
     border: 2px solid red;
@@ -173,10 +187,16 @@
     font-weight: 900;
     transition: 250ms;
 }
+@media screen and (max-width: 1500px) {
+    .split-screen .page{
+        background-color: blue;
+        width: 90%;
+        padding: 2rem;
+    }
+}
 @media screen and (max-width: 1300px) {
-    .main-content .delete-account-container, .change-password-container, .change-email-container{
-        width: 50%;
-        transition: all 0.5s ease;
+    .main-content .page-content{
+        padding: 1.5rem;
     }
 }
 @media screen and (max-width: 1300px) {
@@ -188,6 +208,10 @@
     } 
     .main-content .delete-account-container, .change-password-container, .change-email-container{
         width: 60%;
+        transition: all 0.5s ease;
+    }
+    .main-content .page-content{
+        padding: 0;
         transition: all 0.5s ease;
     }
 }
@@ -213,7 +237,8 @@
         border-bottom: 1px solid #bababa;
     }
     .main-content .page-content{
-        padding: 2rem;
+        padding: 0.8rem;
+        transition: all 0.5s ease;
     }
     .main-content .update-form{
         width: 100%;
@@ -258,7 +283,8 @@
         position: fixed;
     }
     .main-content .page-content{
-        padding: 1rem;
+        padding: 0.5rem;
+        transition: all 0.5s ease;
     }
     .main-content .delete-account-container, .change-password-container, .change-email-container{
         width: 80%;

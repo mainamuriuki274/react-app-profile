@@ -4,34 +4,44 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import BaseUrl from "./BaseURL";
 import { useHistory } from "react-router-dom";
+import { EmailValidator } from "./FormValidator";
 
 const Login = (props) => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
-    const [error, setError] = useState();
+    const [error, setError] = useState(false);
+    const [emailError, setEmailError] = useState();
     const setToken = props.setToken;
     const history = useHistory(); 
-
+    
     const handleSubmit = (e) => {
         e.preventDefault()
-        fetch(BaseUrl + 'login', {
-            method: "GET",
-            headers: {'Authorization': 'Basic ' + window.btoa(email + ":" + password)}
-        })
-        .then(res => {
-            if(!res.ok && res.status === 401){
-                
-            }
-            else{
-                setError('Something went wrong')
-            }
-        return res.json()
-        })
-        .then((data) => {
-            console.log(data.token)
-            setToken(data.token)
-            history.push("/home")
-        })
+        setEmailError(false)
+        setError('')
+        if(!EmailValidator(email)){
+            setEmailError(true);
+         }
+         else{
+            fetch(BaseUrl + 'login', {
+                method: "GET",
+                headers: {'Authorization': 'Basic ' + window.btoa(email + ":" + password)}
+            })
+            .then(res => {
+                if(!res.ok && res.status === 401){
+                    setError('Invalid Email or password')
+                }
+                else{
+                    setError('Something went wrong')
+                }
+            return res.json()
+            })
+            .then((data) => {
+                if(data.token){
+                    setToken(data.token)
+                    history.push("/home")
+                }
+            })
+         }
     }
     return ( 
         <SplitScreen
@@ -47,24 +57,24 @@ const Login = (props) => {
                     <input 
                     type="text"
                     required
-                    onChange = {(e) => {
-                        setEmail(e.target.value)
-                    }}
+                    value = {email}
+                    onChange = {e => setEmail(e.target.value)}
                     />
+                {emailError && <span className="form-error">Please enter a valid email</span>}
                 </div>
                 <div className="password">
                     <label>Password</label>
                     <input 
                     type="password"
                     required
-                    onChange = {(e) => {
-                        setPassword(e.target.value)
-                    }}
+                    value = {password}
+                    onChange = {e => setPassword(e.target.value)}
                     />
                 </div>
                 <button className="btn btn-primary btn-submit">Login</button>
-                {error && <span className="form-error">{error}</span>}
+                {error && <span className="form-error"><br /> {error} <br /> <br /></span> }
                 <Link className="forgot-password" to="/forgot-password">Forgot password?</Link>
+                
             </form>
             ]}
         />

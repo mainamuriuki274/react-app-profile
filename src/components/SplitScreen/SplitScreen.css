@@ -73,6 +73,7 @@ input[type=checkbox]{
     float: right;
     margin: 0 1rem;
 }
+
 @media screen and (max-width: 960px) {
     .split-screen .left{
         visibility: hidden;
@@ -84,10 +85,22 @@ input[type=checkbox]{
     .split-screen .logo-mobile{
         visibility: visible;
     }
+    .logo-container{
+        width: 100%;
+    }
     .split-screen .action{
         visibility: hidden;
     }
     .split-screen .action-mobile{
         visibility: visible;
+    }
+    .split-screen .form-container{
+        width: 90%;
+        position: relative;
+        transform: translate(-50%, -0%);
+        top: 0;
+    }
+    .form-title{
+        font-size: 5vw;
     }
 }

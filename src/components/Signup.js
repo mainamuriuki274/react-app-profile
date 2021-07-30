@@ -2,8 +2,7 @@ import SplitScreen from "../components/SplitScreen/SplitScreen";
 import welcomeImg from '../images/welcome.png'
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { EmailExists, EmailValidator } from "./EmailValidator";
-import { PasswordValidator } from "./PasswordValidator";
+import { EmailExists, EmailValidator, PasswordValidator } from "./FormValidator";
 import { useHistory } from "react-router-dom";
 import BaseUrl from "./BaseURL";
 
@@ -18,6 +17,17 @@ const Signup = (props) => {
     const [passwordError, setPasswordError] = useState(false);
     const history = useHistory(); 
     const setToken = props.setToken
+
+    const saveUser = (user) =>{
+        return fetch(BaseUrl +'user', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(user)
+                });
+        
+    }
 
     const handleValidation = () => {
         let isValidForm = true
@@ -49,27 +59,28 @@ const Signup = (props) => {
                     setEmailError("Email exists");
                 }
                 else{
-                    const user = {email, password};
-                    fetch(BaseUrl +'user', {
-                        method: "POST",
-                        headers: {"Content-Type": "application/json"},
-                        body: JSON.stringify(user)
-                    })
-                    .then(res => {
-                        if(!res.ok){
-                            throw Error('Something went wrong')
-                        }
-                    return res.json()
-                    })
-                    .then((data) => {
-                        setEmail('')
-                        setPassword('')
-                        setConfirmPassword('')
-                        setAccept(false)
-                        setToken(data.token)
-                        history.push('/create-profile')
-                    })
-        
+                    const postUser = async () => {
+                        const user = {email, password};
+                            await saveUser(user)
+                            .then(res => {
+                                if(!res.ok){
+                                    throw Error("Something went wrong...")
+                                }
+                            return res.json()
+                            })
+                            .then((data) => {
+                                setEmail('')
+                                setPassword('')
+                                setConfirmPassword('')
+                                setAccept(false)
+                                setToken(data.token)
+                                history.push('/create-profile')
+                            }).catch( err => {
+                                console.log("Error!!", err)
+                                setFormError("Something went wrong...", err)
+                            });
+                    }
+                    postUser();
                 }
         }
         checkEmail();
@@ -92,9 +103,8 @@ const Signup = (props) => {
                         placeholder="Email"
                         type="text"
                         required
-                        onChange = {(e) => {
-                            setEmail(e.target.value)
-                        }}
+                        value = {email}
+                        onChange = {e => setEmail(e.target.value)}
                     />
                     {emailError && <span className="form-error">{emailError}</span>}
                 </div>
@@ -104,9 +114,8 @@ const Signup = (props) => {
                         placeholder="Password"
                         type="password"
                         required
-                        onChange = {(e) => {
-                            setPassword(e.target.value)
-                        }}
+                        value = {password}
+                        onChange = {e => setPassword(e.target.value)}
                     />
                     {passwordError && <span className="form-error">Please enter a stronger password</span>}
                 </div>
@@ -116,17 +125,15 @@ const Signup = (props) => {
                         placeholder="Confirm Password"
                         type="password"
                         required
-                        onChange = {(e) => {
-                            setConfirmPassword(e.target.value)
-                        }}
+                        value = {confirmPassword}
+                        onChange = {e => setConfirmPassword(e.target.value)}
                     />
                     {confirmPasswordError && <span className="form-error">Passwords do not match</span>}
                 </div>
                 <div className="accept-checkbox">
                     <input type="checkbox"
-                        onChange = {(e) => {
-                            setAccept(!accept)
-                        }}
+                        value = {accept}
+                        onChange = {e => setAccept(!accept)}
                     />
                     <label>
                         Creating an account means you are okay with our and <Link to="/terms-and-conditions">Terms and Conditions</Link> and <Link to="/privacy-policy">Privacy Policy</Link>.

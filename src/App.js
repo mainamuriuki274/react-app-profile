@@ -8,12 +8,9 @@ import PageNotFound from './components/PageNotFound';
 import EmailSent from './components/EmailSent';
 import AccountDeleted from './components/AccountDeleted';
 import Home from './components/Home';
-import UpdateForm from './components/UpdateForm';
-import DeleteAccount from './components/DeleteAccount';
-import ChangePassword from './components/ChangePassword';
-import ChangeEmail from './components/ChangeEmail';
 import Landing from './components/Landing/Landing';
 import useToken from './components/useToken';
+import Main from './components/Main/Main';
 
 function App() {
   const { token, setToken } = useToken();
@@ -44,22 +41,13 @@ function App() {
       <Router>
         <Switch>
           <Route path="/create-profile">
-            <CreateProfile />
+            <CreateProfile token={token}/>
           </Route>
           <Route exact path="/my-account">
-            <UpdateForm />
-          </Route>
-          <Route path="/my-account/delete-account">
-            <DeleteAccount />
-          </Route>
-          <Route path="/my-account/change-password">
-            <ChangePassword />
-          </Route>
-          <Route path="/my-account/change-email">
-            <ChangeEmail />
+            <Main token={token}/>
           </Route>
           <Route path="/home">
-            <Home />
+            <Home  token={token}/>
           </Route>
           </Switch>
       </Router>
