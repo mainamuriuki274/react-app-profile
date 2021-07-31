@@ -68,7 +68,9 @@ const Main = (props) => {
                             />
                         </Route>
                         <Route path="/my-account/delete-account">
-                            <DeleteAccount/>
+                            <DeleteAccount
+                            token = {props.token}
+                            />
                         </Route>
                         <Route path="/my-account/change-password">
                             <ChangePassword
