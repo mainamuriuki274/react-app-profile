@@ -12,6 +12,7 @@ const ChangeEmail = (props) => {
     const [emailError, setEmailError] = useState();
     const [formError, setFormError] = useState();
     const [updatedSuccess, setUpdatedSuccess] = useState(false);
+    const [isPending, setIsPending] = useState(false);
     const [isPageLoading, setIsPageLoading] = useState(true);
     const [isPageLoadingImg, setIsPageLoadingImg] = useState(loadingPage);
     const [isPageLoadingText, setIsPageLoadingText] = useState("Hold still while we go and get your page...");
@@ -89,6 +90,7 @@ const ChangeEmail = (props) => {
     }
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setIsPending(true);
         if(validateEmail()){
             await fetch(BaseUrl +'user/email', {
                 method: "PUT",
@@ -103,17 +105,19 @@ const ChangeEmail = (props) => {
                     setUpdatedSuccess(true)
                     setOldEmail(email)
                     setEmail("")
+                    setIsPending(false);
                 }
                 else{
+                    setIsPending(false);
                     setFormError('Something went wrong')
                 }
             return res.json()
             })
             .catch( err => {
-                if(err.name !== 'AbortError'){
+                    setIsPending(false);
                     setFormError("Something went wrong...")
-                }
             });
+            setIsPending(false);
         }
     }
 
@@ -153,6 +157,7 @@ const ChangeEmail = (props) => {
                         {emailError && <span className="form-error">{emailError}</span>}
                     </div>
                     <button className="btn btn-primary btn-submit">save</button>
+                    {isPending &&<div className="loading" ><img src={loading} alt="loading" /></div>}
                 </form>
             </div>
             }
