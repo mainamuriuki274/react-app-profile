@@ -1,89 +1,129 @@
 import SplitScreen from "../components/SplitScreen/SplitScreen";
 import welcomeImg from '../images/welcome.png'
+import loading from '../images/loading.gif'
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { EmailExists, EmailValidator, PasswordValidator } from "./FormValidator";
+import { EmailValidator, PasswordValidator } from "./FormValidator";
 import { useHistory } from "react-router-dom";
 import BaseUrl from "./BaseURL";
 
 const Signup = (props) => {
+    // form state variables
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
     const [accept, setAccept] = useState(false)
+    const [isPending, setIsPending] = useState(false);
+
+    // error state variables for form
     const [emailError, setEmailError] = useState();
     const [formError, setFormError,] = useState();
     const [confirmPasswordError, setConfirmPasswordError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+
     const history = useHistory(); 
     const setToken = props.setToken
 
-    const saveUser = (user) =>{
-        return fetch(BaseUrl +'user', {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(user)
-                });
-        
-    }
+    // validate form
+    const handleValidation = async () => {
+        let isValidForm = true;
+        setIsPending(true)
 
-    const handleValidation = () => {
-        let isValidForm = true
-        setFormError(false)
-        setEmailError(false)
-        setPasswordError(false)
-        setConfirmPasswordError(false)
+        // reset form errors
+        setFormError(false);
+        setEmailError(false);
+        setPasswordError(false);
+        setConfirmPasswordError(false);
+
+        // confirm if email provided is valid
         if(!EmailValidator(email)){
             isValidForm = false;
             setEmailError("Please enter a valid email");
          }
-         if(!PasswordValidator(password)){
+
+        // ensure password is at least 8 characters long
+        if(!PasswordValidator(password)){
             isValidForm = false;
             setPasswordError(true);
-         }
-         if(confirmPassword !== password){
+        }
+
+        // confirm passwords match
+        if(confirmPassword !== password){
             isValidForm = false;
             setConfirmPasswordError(true);
-         }
+        }
+
+        //ensure email provided is not already used
+        if(EmailValidator(email)){
+            await fetch(BaseUrl + "email/" + email, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then(response => {
+                if(response.status === 409){
+                    isValidForm = false;
+                    setEmailError("Email already exists");
+                }
+                else{
+                    if(!response.ok){
+                        throw Error('Could not validate email. Please try again');
+                    } 
+                }
+            })
+            .catch( error => {
+                isValidForm = false;
+                setFormError("Something went wrong...")
+                if(error.message === "Failed to fetch"){
+                    setEmailError("Could not validate email.")
+                }
+            });
+        }
+         setIsPending(false)
          return isValidForm
     }
 
-    const handleSubmit = (e) => {
+    // submit user details
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if(handleValidation()){
-            const checkEmail = async () => {
-                let response = await EmailExists(email)
-                if(response.status === 409){
-                    setEmailError("Email exists");
+        if(await handleValidation()){
+            const user = {
+                "email": email,
+                "password": password
+            };
+
+            await fetch(BaseUrl +'user', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(user)
+            })
+            .then(res => {
+                if(res.ok){
+                    setIsPending(false)
+                    return res.json()
                 }
                 else{
-                    const postUser = async () => {
-                        const user = {email, password};
-                            await saveUser(user)
-                            .then(res => {
-                                if(!res.ok){
-                                    throw Error("Something went wrong...")
-                                }
-                            return res.json()
-                            })
-                            .then((data) => {
-                                setEmail('')
-                                setPassword('')
-                                setConfirmPassword('')
-                                setAccept(false)
-                                setToken(data.token)
-                                history.push('/create-profile')
-                            }).catch( err => {
-                                console.log("Error!!", err)
-                                setFormError("Something went wrong...", err)
-                            });
-                    }
-                    postUser();
+                    throw Error("Something went wrong...")
                 }
-        }
-        checkEmail();
+            })
+            .then((data) => {
+                setToken(data.token)
+                if(data.token){
+                setEmail('')
+                setPassword('')
+                setConfirmPassword('')
+                setAccept(false)
+                setIsPending(false)
+                history.push('/create-profile')
+                }
+            }).catch( error => {
+                setIsPending(false)
+                setFormError("Something went wrong...", error)
+            });
+            setIsPending(false);
         }
     }
 
@@ -103,7 +143,7 @@ const Signup = (props) => {
                         placeholder="Email"
                         type="text"
                         required
-                        value = {email}
+                        value = {email || ''}
                         onChange = {e => setEmail(e.target.value)}
                     />
                     {emailError && <span className="form-error">{emailError}</span>}
@@ -114,7 +154,7 @@ const Signup = (props) => {
                         placeholder="Password"
                         type="password"
                         required
-                        value = {password}
+                        value = {password || ''}
                         onChange = {e => setPassword(e.target.value)}
                     />
                     {passwordError && <span className="form-error">Please enter a stronger password</span>}
@@ -125,7 +165,7 @@ const Signup = (props) => {
                         placeholder="Confirm Password"
                         type="password"
                         required
-                        value = {confirmPassword}
+                        value = {confirmPassword || ''}
                         onChange = {e => setConfirmPassword(e.target.value)}
                     />
                     {confirmPasswordError && <span className="form-error">Passwords do not match</span>}
@@ -140,6 +180,7 @@ const Signup = (props) => {
                     </label>
                 </div>
                 <button disabled={!accept} className="btn btn-primary btn-submit">Create Account</button>
+                {isPending &&<div className="loading" ><img src={loading} alt="loading" /></div>}
             </form>
             ]}
         />

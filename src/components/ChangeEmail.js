@@ -1,6 +1,10 @@
 import { useState } from "react";
 import BaseUrl from "./BaseURL";
-import { EmailExists, EmailValidator } from "./FormValidator";
+import { EmailValidator } from "./FormValidator";
+import Main from "./Main/Main";
+import loading from '../images/loading.gif'
+import loadingPage from '../images/miss_minutes.gif'
+import noConnection from '../images/no_connection.gif'
 
 const ChangeEmail = (props) => {
     const [oldEmail, setOldEmail] = useState(props.email);
@@ -8,77 +12,121 @@ const ChangeEmail = (props) => {
     const [emailError, setEmailError] = useState();
     const [formError, setFormError] = useState();
     const [updatedSuccess, setUpdatedSuccess] = useState(false);
+    const [isPageLoading, setIsPageLoading] = useState(true);
+    const [isPageLoadingImg, setIsPageLoadingImg] = useState(loadingPage);
+    const [isPageLoadingText, setIsPageLoadingText] = useState("Hold still while we go and get your page...");
 
     const closeAlert = () => {
         setUpdatedSuccess(false)
     }
 
-    const updateEmail = (userEmail) =>{
-        return fetch(BaseUrl +'user/email', {
-                            method: "PUT",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "x-access-token": props.token
-                            },
-                            body: JSON.stringify({"email":userEmail})
-                        });
+    const getUserEmail = async () => {
+        await fetch(BaseUrl + "user" , {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-access-token": props.token
+            }
+        })
+        .then(response => {
+            if(response.ok){
+                return response.json()
+            }
+            else{
+                if(!response.ok){
+                    throw Error();
+                } 
+            }
+        })
+        .then((data) => {
+            setOldEmail(data.user.email);
+            setIsPageLoading(false);
+        })
+        .catch( error => {
+            if(error.message === "Failed to fetch"){
+                setIsPageLoadingImg(noConnection);
+                setIsPageLoadingText("Uh oh! Failed to connect to the server.")
+            }
+        });
     }
-
-    const validateEmail = () => {
+    setTimeout( () => {getUserEmail();} , 3000);
+    const validateEmail = async () => {
         let isValidForm = true
         setFormError("")
         setEmailError("")
-        if(email === oldEmail){
-            setEmailError("You are already using that email")
+        if(!EmailValidator(email)){
+            isValidForm = false;
+            setEmailError("Please enter a valid email");
         }
         else{
-            if(!EmailValidator(email)){
-                isValidForm = false;
-                setEmailError("Please enter a valid email");
-            }
-        }
-        return isValidForm 
-    }
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        if(validateEmail()){
-            const putEmail = async () => {
-                let emailStatus = 200
-                if(email === oldEmail){
-                    setEmailError("You are already using that email")
+            await fetch(BaseUrl + "email/" + email, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then(response => {
+                if(response.status === 409){
+                    isValidForm = false;
+                    setEmailError("Email already exists");
                 }
                 else{
-                    let emailResponse = await EmailExists(email);
-                    emailStatus = emailResponse.status
-                    if(emailStatus === 409){
-                        setEmailError("Email already exists");
-                    }
+                    if(!response.ok){
+                        throw Error('Could not validate email. Please try again');
+                    } 
                 }
-                if(emailStatus === 200){
-                        await updateEmail(email)
-                        .then(res => {
-                            if(res.ok){
-                                setUpdatedSuccess(true)
-                                setOldEmail(email)
-                                setEmail("")
-                            }
-                            else{
-                                setFormError('Something went wrong')
-                            }
-                        return res.json()
-                        })
-                        .catch( err => {
-                            if(err.name !== 'AbortError'){
-                                setFormError("Something went wrong...")
-                            }
-                        });
-                    }
-            }
-            putEmail();
+            })
+            .catch( error => {
+                isValidForm = false;
+                setFormError("Something went wrong...")
+                if(error.message === "Failed to fetch"){
+                    setEmailError("Could not validate email.")
+                }
+            });
+        }
+        
+        return isValidForm 
+    }
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        if(validateEmail()){
+            await fetch(BaseUrl +'user/email', {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": props.token
+                },
+                body: JSON.stringify({"email":email})
+            })
+            .then(res => {
+                if(res.ok){
+                    setUpdatedSuccess(true)
+                    setOldEmail(email)
+                    setEmail("")
+                }
+                else{
+                    setFormError('Something went wrong')
+                }
+            return res.json()
+            })
+            .catch( err => {
+                if(err.name !== 'AbortError'){
+                    setFormError("Something went wrong...")
+                }
+            });
         }
     }
 
     return ( 
+        <Main
+        pageContent = {[
+            <div className="main-container-content">
+                {isPageLoading ? 
+                <div className="page-loading">
+                <img src={isPageLoadingImg} alt="" />
+                <p>{isPageLoadingText}</p>
+            </div>
+            :
             <div className="change-email-container">
                 <h1>Change Email</h1>
                 {updatedSuccess && <div className="form-success"><p>Successfully updated your email</p><div onClick={closeAlert} className="close-btn-icon"><i className="fas fa-times"></i></div></div>}
@@ -107,6 +155,10 @@ const ChangeEmail = (props) => {
                     <button className="btn btn-primary btn-submit">save</button>
                 </form>
             </div>
+            }
+            </div>
+        ]}
+        />
      );
 }
  

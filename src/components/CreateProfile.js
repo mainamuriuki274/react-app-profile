@@ -2,10 +2,12 @@ import { useState } from "react";
 import SplitScreen from "../components/SplitScreen/SplitScreen";
 import createProfile from "../images/create_profile.png";
 import BaseUrl from "./BaseURL";
-import { AgeValidator, PhonenumberExists, PhonenumberValidator, UsernameExists } from "./FormValidator";
+import { AgeValidator, PhonenumberValidator } from "./FormValidator";
 import { useHistory } from "react-router-dom";
+import loading from '../images/loading.gif'
 
 const CreateProfile = (props) => {
+    // state variables and other variables declaration
     const history = useHistory(); 
     const [profilePhoto, setProfilePhoto] = useState();
     const [username,setUsername] = useState('');
@@ -15,6 +17,7 @@ const CreateProfile = (props) => {
     const [phonenumber, setPhonenumber] = useState('');
     const [dob, setDob] = useState('');
     const [img, setImg] = useState();
+    const [isPending, setIsPending] = useState(false);
 
     const [profilePhotoError, setProfilePhotoError] = useState();
     const [usernameError, setUsernameError] = useState();
@@ -25,31 +28,11 @@ const CreateProfile = (props) => {
     const [dobError, setDobError] = useState();
     const [formError, setFormError] = useState();
 
-    const getBase64 = (file) => {
-        return new Promise(resolve => {
-          let baseURL = "";
-          let reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => {
-            baseURL = reader.result;
-            resolve(baseURL);
-            setImg(baseURL)
-          };
-        });
-      };
-    const saveProfile = (userProfile) =>{
-        return fetch(BaseUrl +'profile', {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "x-access-token": props.token
-                            },
-                            body: JSON.stringify(userProfile)
-                        });
-        
-    }
-    const handleValidation = () => {
+    const handleValidation = async () => {
         let isValidForm = true;
+        
+        // reset error messages
+        setFormError("")
         setProfilePhotoError('')
         setUsernameError('')
         setFirstnameError('')
@@ -57,79 +40,169 @@ const CreateProfile = (props) => {
         setGenderError('')
         setPhonenumberError('')
         setDobError('')
+
+        // ensure profile photo is selected
         if(!profilePhoto){
             isValidForm = false;
             setProfilePhotoError("Please select a profile photo");
         }
+
+        // ensure username is not empty
         if(!username){
             isValidForm = false;
-            setUsernameError("Please enter your firstname");
+            setUsernameError("Please enter a username");
         }
+
+        // ensure firstname is entered
         if(!firstname){
             isValidForm = false;
             setFirstnameError("Please enter your firstname");
         }
+
+        // ensure the lastname has been provided
         if(!lastname){
             isValidForm = false;
             setLastnameError("Please enter your lastname");
         }
+
+        // ensure a gender is selected
         if(!gender){
             isValidForm = false;
             setGenderError("Please enter your gender");
         }
+
+        // ensure phonumber is valid
         if(!PhonenumberValidator(phonenumber)){
             isValidForm = false;
             setPhonenumberError("Please enter a valid phonenumber");
         }
+
+        // ensure age is between 13 and 119
         if(!AgeValidator(dob)){
             isValidForm = false;
             setDobError("Please enter a valid age");
         }
         
+        // ensure phonenumber provided is not already used
+        if(PhonenumberValidator(phonenumber)){
+            await fetch(BaseUrl + "phonenumber/" + phonenumber, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then(response => {
+                if(response.status === 409){
+                    isValidForm = false;
+                    setPhonenumberError("Phonenumber already exists");
+                }
+                else{
+                    if(!response.ok){
+                        throw Error('Could not validate phonenumber.');
+                    } 
+                }
+            })
+            .catch( error => {
+                isValidForm = false;
+                setFormError("Something went wrong...")
+                if(error.message === "Failed to fetch"){
+                    setPhonenumberError("Could not validate phonenumber.")
+                }
+            });
+        }
+
+         // ensure usernmae provided is not already used
+         if(username){
+            await fetch(BaseUrl + "username/" + username, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then(response => {
+                if(response.status === 409){
+                    isValidForm = false;
+                    setUsernameError("Username already exists");
+                }
+                else{
+                    if(!response.ok){
+                        throw Error('Could not validate username.');
+                    } 
+                }
+            })
+            .catch( error => {
+                isValidForm = false;
+                setFormError("Something went wrong...")
+                if(error.message === "Failed to fetch"){
+                    setUsernameError("Could not validate phonenumber.")
+                }
+            });
+        }
+
+        // convert Image to base64
+        if(profilePhoto){
+           await new Promise(resolve => {
+                let baseURL = "";
+                let reader = new FileReader();
+                reader.readAsDataURL(profilePhoto);
+                reader.onload = () => {
+                  baseURL = reader.result;
+                  resolve(baseURL);
+                  setImg(baseURL)
+                };
+            });
+        }
+        if(!img){
+            isValidForm = false;
+        }
+        setIsPending(false)
         return isValidForm
     } 
 
-    const handleSubmit = (e) => {
-        setFormError("")
+    const handleSubmit = async (e) => {
+        setIsPending(true);
         e.preventDefault();
-        if(handleValidation()){
-            const postProfile = async () => {
-                await getBase64(profilePhoto);
-                let phonenumberResponse = await PhonenumberExists(phonenumber)
-                if(phonenumberResponse.status === 409){
-                    setPhonenumberError("Phonenumber already exists");
+        if(await handleValidation()){
+            const userProfile = {
+                                    "img": img,
+                                    "username": username, 
+                                    "firstname": firstname, 
+                                    "lastname": lastname, 
+                                    "gender": gender, 
+                                    "phonenumber": phonenumber,
+                                    "dob": dob
+                                };
+
+            await fetch(BaseUrl +'profile', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": props.token
+                },
+                body: JSON.stringify(userProfile)
+            })
+            .then(res => {
+                if(res.ok){
+                    setProfilePhoto()
+                    setUsername('')
+                    setFirstname('')
+                    setLastname('')
+                    setGender('')
+                    setPhonenumber('')
+                    setDob('')
+                    setIsPending(false)
+                    history.push('/home')
                 }
-                let usernameResponse = await UsernameExists(username)
-                if(usernameResponse.status === 409){
-                    setUsernameError("Username already taken");
+                else{
+                    setFormError('Something went wrong')
                 }
-                if(phonenumberResponse.status === 200 && usernameResponse.status === 200){
-                    const userProfile = {img, username, firstname, lastname, gender, phonenumber, dob};
-                        await saveProfile(userProfile)
-                        .then(res => {
-                            if(!res.ok){
-                                setFormError('Something went wrong')
-                            }
-                        return res.json()
-                        })
-                        .then(() => {
-                            setProfilePhoto()
-                            setUsername('')
-                            setFirstname('')
-                            setLastname('')
-                            setGender('')
-                            setPhonenumber('')
-                            setDob('')
-                            history.push('/home')
-                        }).catch( err => {
-                            if(err.name !== 'AbortError'){
-                                setFormError("Something went wrong...")
-                            }
-                        });
-                    }
-                }
-                postProfile();
+            })
+            .catch( error => {
+                setIsPending(false)
+                setFormError("Something went wrong...", error)
+            });
         }
+        setIsPending(false)
     }
 
     return ( 
@@ -216,6 +289,7 @@ const CreateProfile = (props) => {
                     {genderError && <span className="form-error">{genderError}</span>}
                 </div>
                 <button className="btn btn-primary btn-submit">Create Profile</button>
+                {isPending &&<div className="loading" ><img src={loading} alt="loading" /></div>}
             </form>
             ]}
         />
