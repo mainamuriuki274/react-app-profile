@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import BaseUrl from "./BaseURL";
+import Main from "./Main/Main";
 
 const DeleteAccount = (props) => {
     const [password, setPassword] = useState();
@@ -48,6 +49,8 @@ const DeleteAccount = (props) => {
         }
     }
     return ( 
+            <Main
+                pageContent = {[
                 <div className="delete-account-container">
                     <h1>Delete my account</h1>
                     <span><i className="fas fa-exclamation-triangle"></i></span>
@@ -66,6 +69,8 @@ const DeleteAccount = (props) => {
                         <button className="btn btn-outline">I understand the consequences, delete my account</button>
                     </form>
                 </div>
+                ]}
+            />
      );
 }
  

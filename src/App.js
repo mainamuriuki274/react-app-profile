@@ -10,7 +10,10 @@ import AccountDeleted from './components/AccountDeleted';
 import Home from './components/Home';
 import Landing from './components/Landing/Landing';
 import useToken from './components/useToken';
-import Main from './components/Main/Main';
+import UpdateForm from './components/UpdateForm';
+import ChangeEmail from './components/ChangeEmail';
+import DeleteAccount from './components/DeleteAccount';
+import ChangePassword from './components/ChangePassword';
 
 function App() {
   const { token, setToken } = useToken();
@@ -21,33 +24,42 @@ function App() {
           <Route path="/" exact>
             <Landing />
           </Route>
-          <Route path="/signup">
+          <Route exact path="/signup">
             <Signup setToken={setToken}/>
           </Route>
-          <Route path="/login">
+          <Route exact path="/login">
             <Login setToken={setToken} />
           </Route>
-          <Route path="/forgot-password">
+          <Route exact path="/forgot-password">
             <ForgotPassword />
           </Route>
-          <Route path="/email-sent">
+          <Route exact path="/email-sent">
             <EmailSent />
-          </Route>
-          <Route path="/account-deleted">
-            <AccountDeleted />
           </Route>
 
       {!token ? <Redirect to="/login" /> :
       <Router>
         <Switch>
-          <Route path="/create-profile">
+          <Route exact path="/create-profile">
             <CreateProfile token={token}/>
           </Route>
-          <Route exact path="/my-account">
-            <Main token={token}/>
-          </Route>
-          <Route path="/home">
+          <Route exact path="/home">
             <Home  token={token}/>
+          </Route>
+          <Route exact path="/my-account">
+            <UpdateForm  token={token}/>
+          </Route>
+          <Route exact path="/change-email">
+            <ChangeEmail  token={token}/>
+          </Route>
+          <Route exact path="/change-password">
+            <ChangePassword  token={token}/>
+          </Route>
+          <Route exact path="/delete-account">
+            <DeleteAccount  token={token}/>
+          </Route>
+          <Route exact path="/account-deleted">
+            <AccountDeleted />
           </Route>
           </Switch>
       </Router>

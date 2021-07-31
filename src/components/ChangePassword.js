@@ -1,6 +1,7 @@
 import { useState } from "react";
 import BaseUrl from "./BaseURL";
 import { PasswordValidator } from "./FormValidator";
+import Main from "./Main/Main";
 
 const ChangePassword = (props) => {
     const [oldPassword, setOldPassword] = useState();
@@ -74,6 +75,8 @@ const ChangePassword = (props) => {
     }
 
     return ( 
+        <Main
+            pageContent = {[
             <div className="change-password-container">
                 <h1>Change password</h1>
                 {updatedSuccess && <div className="form-success"><p>Successfully updated your password</p><div onClick={closeAlert} className="close-btn-icon"><i className="fas fa-times"></i></div></div>}
@@ -113,6 +116,8 @@ const ChangePassword = (props) => {
                     <button className="btn btn-primary btn-submit">save</button>
                 </form>
             </div>
+            ]}
+            />
      );
 }
  
