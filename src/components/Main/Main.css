@@ -80,10 +80,12 @@
     color: var(--primary);
     background-color: white;
 }
-.main-content .main-profile-img{
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+.profile-img{
+    width: 200px;
+    height: auto;
+    margin: 0 auto;
+    padding: 1rem 0;
+    box-shadow: #bababa;
 }
 .main-content .menu-icon-open{
     margin-right: auto;
@@ -111,14 +113,6 @@
 .main-content .update-form{
     width: 70%;
     margin: 0 auto;
-}
-.main-content .update-form img{
-    width: 100px;
-    height: auto;
-    margin: 0 auto;
-    border-radius: 50%;
-    padding: 1rem 0;
-    box-shadow: #bababa;
 }
 .main-content .page-content{
     width: 100%;

@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import welcome from '../images/welcome.png'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BaseUrl from "./BaseURL";
 import { AgeValidator, PhonenumberValidator } from "./FormValidator";
 import Main from "./Main/Main";
@@ -10,6 +9,8 @@ import noConnection from '../images/no_connection.gif'
 
 const UpdateForm = (props) => {
     // state variables and other variables declaration
+    const [currentNumber, setCurrentNumber] = useState();
+    const [currentUsername, setCurrentUsername] = useState();
     const [profilePhoto, setProfilePhoto] = useState();
     const [username,setUsername] = useState('');
     const [firstname, setFirstname] = useState('');
@@ -56,13 +57,16 @@ const UpdateForm = (props) => {
             }
         })
         .then((data) => {
-            setUsername(data.profile.username)
-            setFirstname(data.profile.firstname)
-            setLastname(data.profile.lastname)
-            setGender(data.profile.gender)
-            setPhonenumber(data.profile.phonenumber)
-            setDob(data.profile.dob)
-            setIsPageLoading(false)
+            setCurrentNumber(data.profile.phonenumber);
+            setCurrentUsername(data.profile.username);
+            setImg(data.profile.profile_photo);
+            setUsername(data.profile.username);
+            setFirstname(data.profile.firstname);
+            setLastname(data.profile.lastname);
+            setGender(data.profile.gender);
+            setPhonenumber(data.profile.phonenumber);
+            setDob(data.profile.dob);
+            setIsPageLoading(false);
         })
         .catch( error => {
             if(error.message === "Failed to fetch"){
@@ -71,7 +75,9 @@ const UpdateForm = (props) => {
             }
         });
     }
-    setTimeout( () => {getUserData();} , 3000);
+    useEffect(() => {
+        setTimeout( () => {getUserData();} , 3000);
+    }, []);
     const handleValidation = async () => {
         let isValidForm = true;
         
@@ -84,12 +90,6 @@ const UpdateForm = (props) => {
         setGenderError('')
         setPhonenumberError('')
         setDobError('')
-
-        // ensure profile photo is selected
-        if(!profilePhoto){
-            isValidForm = false;
-            setProfilePhotoError("Please select a profile photo");
-        }
 
         // ensure username is not empty
         if(!username){
@@ -116,9 +116,11 @@ const UpdateForm = (props) => {
         }
 
         // ensure phonumber is valid
-        if(!PhonenumberValidator(phonenumber)){
-            isValidForm = false;
-            setPhonenumberError("Please enter a valid phonenumber");
+        if(currentNumber !== phonenumber){
+            if(!PhonenumberValidator(phonenumber)){
+                isValidForm = false;
+                setPhonenumberError("Please enter a valid phonenumber");
+            }
         }
 
         // ensure age is between 13 and 119
@@ -128,6 +130,7 @@ const UpdateForm = (props) => {
         }
         
         // ensure phonenumber provided is not already used
+        if(currentNumber !== phonenumber){
         if(PhonenumberValidator(phonenumber)){
             await fetch(BaseUrl + "phonenumber/" + phonenumber, {
                 method: "GET",
@@ -153,9 +156,10 @@ const UpdateForm = (props) => {
                     setPhonenumberError("Could not validate phonenumber.")
                 }
             });
+            }
         }
-
          // ensure usernmae provided is not already used
+         if(currentUsername !== username){
          if(username){
             await fetch(BaseUrl + "username/" + username, {
                 method: "GET",
@@ -182,6 +186,7 @@ const UpdateForm = (props) => {
                 }
             });
         }
+    }
 
         // convert Image to base64
         if(profilePhoto){
@@ -215,7 +220,7 @@ const UpdateForm = (props) => {
                                 };
 
             await fetch(BaseUrl +'profile', {
-                method: "POST",
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     "x-access-token": props.token
@@ -224,14 +229,8 @@ const UpdateForm = (props) => {
             })
             .then(res => {
                 if(res.ok){
-                    setProfilePhoto()
-                    setUsername('')
-                    setFirstname('')
-                    setLastname('')
-                    setGender('')
-                    setPhonenumber('')
-                    setDob('')
                     setIsPending(false)
+                    setUpdatedSuccess(true)
                 }
                 else{
                     setFormError('Something went wrong')
@@ -264,7 +263,7 @@ const UpdateForm = (props) => {
                 <div className="left-section">
                     <h2 className="section-title">Personal Information</h2>
                     <div className="profile-photo">
-                        <img className="profile-img" src={welcome} alt="" />
+                        <img className="profile-img" src={img} alt="profile" />
                         <input 
                         type="file"
                         accept="image/png, image/jpeg, image/jpg"
