@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import BaseUrl from "./BaseURL";
 import { AgeValidator, PhonenumberValidator } from "./FormValidator";
@@ -33,6 +33,7 @@ const UpdateForm = (props) => {
     const [phonenumberError, setPhonenumberError] = useState();
     const [dobError, setDobError] = useState();
     const [formError, setFormError] = useState();
+    const history = useHistory(); 
     
     const closeAlert = () => {
         setUpdatedSuccess(false)
@@ -49,6 +50,9 @@ const UpdateForm = (props) => {
         .then(response => {
             if(response.ok){
                 return response.json()
+            }
+            else if(response.status === 404){
+                history.push('/create-profile')
             }
             else{
                 if(!response.ok){
@@ -75,8 +79,9 @@ const UpdateForm = (props) => {
             }
         });
     }
+    // eslint-disable-next-line
     useEffect(() => {
-        setTimeout( () => {getUserData();} , 3000);
+        getUserData();
     }, []);
     const handleValidation = async () => {
         let isValidForm = true;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BaseUrl from "./BaseURL";
 import { EmailValidator } from "./FormValidator";
 import Main from "./Main/Main";
@@ -50,7 +50,10 @@ const ChangeEmail = (props) => {
             }
         });
     }
-    setTimeout( () => {getUserEmail();} , 3000);
+    // eslint-disable-next-line
+    useEffect(() => {
+        getUserEmail();
+    }, []);
     const validateEmail = async () => {
         let isValidForm = true
         setFormError("")
